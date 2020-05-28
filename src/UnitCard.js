@@ -5,49 +5,138 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { FormControl, InputLabel, Grid } from '@material-ui/core';
+import Select from '@material-ui/core/Select';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+
   root: {
     minWidth: 275,
+
+    marginTop:50,
+    marginRight: 50,
+    marginBottom: 50,
+    marginLeft: 50,
+
+    flexGrow: 1,
   },
+
   bullet: {
     display: 'inline-block',
     margin: '0 2px',
     transform: 'scale(0.8)',
   },
+
   title: {
     fontSize: 14,
   },
+
   pos: {
     marginBottom: 12,
   },
-});
+
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+
+  root: {
+    
+  },
+
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+
+}));
 
 export default function UnitCard() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
+
+  const [state, setState] = React.useState({
+    age: '',
+    name: 'hai',
+  });
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    setState({
+      ...state,
+      [name]: event.target.value,
+    }); 
+}
 
   return (
-    <Card className={classes.root} variant="outlined">
+    <Card elevation="10" className={classes.root} variant="outlined">
+
       <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Word of the Day
-        </Typography>
-        <Typography variant="h5" component="h2">
-          be{bull}nev{bull}o{bull}lent
-        </Typography>
-        <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography>
-        <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
+
+      <Grid container spacing={3}>
+        <Grid item xs={6}>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            From
+            </Typography>
+
+            <FormControl variant="filled" className={classes.formControl}>
+                <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
+                <Select
+                native
+                value={state.age}
+                onChange={handleChange}
+                inputProps={{
+                    name: 'age',
+                    id: 'filled-age-native-simple',
+                }}
+                >
+                <option aria-label="None" value="" />
+                <option value={10}>kilogram</option>
+                <option value={20}>pund</option>
+                <option value={30}>ounce</option>
+                </Select>
+            </FormControl>
+        </Grid>
+        
+        <Grid item xs={6}>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            To
+            </Typography>
+
+            <FormControl variant="filled" className={classes.formControl}>
+                <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
+                <Select
+                    native
+                    value={state.age}
+                    onChange={handleChange}
+                    inputProps={{
+                        name: 'age',
+                        id: 'filled-age-native-simple',
+                    }}
+                >
+                    <option aria-label="None" value="" />
+                    <option value={10}>kilogram</option>
+                    <option value={20}>pound</option>
+                    <option value={30}>ounce</option>
+                </Select>
+            </FormControl>
+        </Grid>
+      </Grid>
+        
+      
+
       </CardContent>
+
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button variant="contained" color="primary">
+            Convert
+        </Button>
       </CardActions>
+      
     </Card>
   );
 }
