@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { FormControl, InputLabel, Grid } from '@material-ui/core';
+import { FormControl, InputLabel, Grid, TextField } from '@material-ui/core';
 import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
@@ -13,10 +13,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
 
-    marginTop:50,
-    marginRight: 50,
-    marginBottom: 50,
-    marginLeft: 50,
+    marginTop:500,
+    marginRight: 500,
+    marginBottom: 500,
+    marginLeft: 500,
 
     flexGrow: 1,
   },
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   formControl: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(2),
     minWidth: 120,
   },
 
@@ -68,13 +68,56 @@ export default function UnitCard() {
       from: "",
       to: "",
       value: "",
+      convertedValue: "",
     }
   )
 
-  const handleChange = (value) => {
-    console.log("value: ", value.target.value)
-    return value.target.value
+  const handleFromChange = (event) => {
+    console.log("from: ", event.target.value)
+    updateWeightConverter( { from: event.target.value  } )
   }
+
+  const handleToChange = (event) => {
+    console.log("to: ", event.target.value)
+    updateWeightConverter( { to: event.target.value } )
+  }
+
+  const onChangeValue = (event) => {
+    let convertedValue = 0
+    if( weightConverter.from === "kilogram" ){
+      if( weightConverter.from === "pound" ){
+        convertedValue = weightConverter.value * 20462
+      }else if( weightConverter.from === "ounce" ){
+        const convertedValue = weightConverter.value * 35.274
+      }
+    }
+    
+    else if( weightConverter.from === "pound" ){
+      if( weightConverter.from === "kilogram" ){
+        convertedValue = weightConverter.value * 0.453592
+      }else if( weightConverter.from === "ounce" ){
+        convertedValue = weightConverter.value * 16
+      }
+    }
+    
+    else if( weightConverter.from === "ounce" ){
+      if( weightConverter.from === "kilogram" ){
+        convertedValue = weightConverter.value * 0.0283495
+      }else if( weightConverter.from === "pound" ){
+        convertedValue = weightConverter.value * 0.0625
+      }
+    }
+    else{
+      convertedValue = weightConverter.value
+    }
+    
+
+    updateWeightConverter( { value: event.target.value, convertedValue: convertedValue } )
+  }
+
+  useEffect(() => {
+    console.log("efeito ...");
+  }, [weightConverter])
 
   return (
     <Card elevation="10" className={classes.root} variant="outlined">
@@ -89,12 +132,11 @@ export default function UnitCard() {
             </Typography>
 
             <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
+                <InputLabel>Weight</InputLabel>
                 <Select
                   native
                   value={weightConverter.from}
-                  onChange={handleChange}
-                  inputProps={ { name: 'weight' } }
+                  onChange={handleFromChange}
                 >
                 <option aria-label="None" value="" />
                 {
@@ -102,8 +144,8 @@ export default function UnitCard() {
                     unit => { return <option>{unit}</option> }
                   ) 
                 }
-  
                 </Select>
+              <TextField  ut onChange={onChangeValue}>value</TextField >
             </FormControl>
         </Grid>
         
@@ -113,11 +155,11 @@ export default function UnitCard() {
             </Typography>
 
             <FormControl variant="filled" className={classes.formControl}>
-                <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
+                <InputLabel>Weight</InputLabel>
                 <Select
                     native
                     value={weightConverter.to}
-                    onChange={handleChange}                 
+                    onChange={handleToChange}                 
                 >
                     <option aria-label="None" value="" />
                     {
@@ -126,19 +168,13 @@ export default function UnitCard() {
                     ) 
                 }
                 </Select>
+                <TextField value={weightConverter.convertedValue } />
             </FormControl>
         </Grid>
       </Grid>
-        
       
-
       </CardContent>
 
-      <CardActions>
-        <Button variant="contained" color="primary">
-            Convert
-        </Button>
-      </CardActions>
       
     </Card>
   );
