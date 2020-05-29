@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -59,18 +59,22 @@ const useStyles = makeStyles((theme) => ({
 export default function UnitCard() {
   const classes = useStyles();
 
-  const [state, setState] = React.useState({
-    age: '',
-    name: 'hai',
-  });
+  const fromUnit = ["kilogram", "pound", "ounce"]
+  const toUnit = ["kilogram", "pound", "ounce"]
 
-  const handleChange = (event) => {
-    const name = event.target.name;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    }); 
-}
+
+  const [weightConverter, updateWeightConverter] = useState(
+    {
+      from: "",
+      to: "",
+      value: "",
+    }
+  )
+
+  const handleChange = (value) => {
+    console.log("value: ", value.target.value)
+    return value.target.value
+  }
 
   return (
     <Card elevation="10" className={classes.root} variant="outlined">
@@ -79,6 +83,7 @@ export default function UnitCard() {
 
       <Grid container spacing={3}>
         <Grid item xs={6}>
+            
             <Typography className={classes.title} color="textSecondary" gutterBottom>
             From
             </Typography>
@@ -86,18 +91,18 @@ export default function UnitCard() {
             <FormControl variant="filled" className={classes.formControl}>
                 <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
                 <Select
-                native
-                value={state.age}
-                onChange={handleChange}
-                inputProps={{
-                    name: 'age',
-                    id: 'filled-age-native-simple',
-                }}
+                  native
+                  value={weightConverter.from}
+                  onChange={handleChange}
+                  inputProps={ { name: 'weight' } }
                 >
                 <option aria-label="None" value="" />
-                <option value={10}>kilogram</option>
-                <option value={20}>pund</option>
-                <option value={30}>ounce</option>
+                {
+                  fromUnit.map(
+                    unit => { return <option>{unit}</option> }
+                  ) 
+                }
+  
                 </Select>
             </FormControl>
         </Grid>
@@ -111,17 +116,15 @@ export default function UnitCard() {
                 <InputLabel htmlFor="filled-age-native-simple">Weight</InputLabel>
                 <Select
                     native
-                    value={state.age}
-                    onChange={handleChange}
-                    inputProps={{
-                        name: 'age',
-                        id: 'filled-age-native-simple',
-                    }}
+                    value={weightConverter.to}
+                    onChange={handleChange}                 
                 >
                     <option aria-label="None" value="" />
-                    <option value={10}>kilogram</option>
-                    <option value={20}>pound</option>
-                    <option value={30}>ounce</option>
+                    {
+                      toUnit.map(
+                        unit => { return <option>{unit}</option> }
+                    ) 
+                }
                 </Select>
             </FormControl>
         </Grid>
